@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <title>Yorha Player</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const {ipcRenderer} = require('electron')
+    
+    window.addEventListener('online', updateOnlineStatus, false)
+    window.addEventListener('offline', updateOnlineStatus, false)
+
+    function updateOnlineStatus () {
+      ipcRenderer.send('online-status-changed', window.navigator.onLine ? 'online' : 'offline');
+      popNotice(window.navigator.onLine ? 'online' : 'offline')
+    }
+
+    function popNotice (status) {
+      if (!"Notification" in window) { return; }
+      const statusobj = {
+        title: status === 'online' ? '已上线' : '已离线',
+        body: status === 'online' ? '数据同步完成' : '离线状态数据已保存本地'
+      }
+      
+      let notification = new Notification(statusobj.title, {
+        body: statusobj.body
+      })
+    }
+  </script>
+</body>
+</html>

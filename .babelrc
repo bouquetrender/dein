@@ -1,0 +1,23 @@
+{
+  "presets": [
+    ["env",{
+      "target": { 
+        "browsers": ["last 2 versions", "safari >= 7"] 
+      },
+      "modules": false,
+      "useBuiltIns": true
+    }],
+    "stage-2",
+    "react"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "transform-decorators-legacy",
+    "transform-object-assign"
+  ],
+  "env": {
+    "development": {
+      "plugins": ["react-hot-loader/babel"]
+    }
+  }
+}
