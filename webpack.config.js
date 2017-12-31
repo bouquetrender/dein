@@ -4,6 +4,10 @@ const node_modules = path.resolve(__dirname, "node_modules");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const env = process.env.NODE_ENV;
 
+function resolve (dir) {
+  return path.join(__dirname, dir);
+}
+
 const extractPlugin = new ExtractTextPlugin({
   filename: "[name].[chunkhash].css",
   ignoreOrder: true, //禁用顺序检查
@@ -16,7 +20,7 @@ let cssrule = null
 const dev_cssRule = [
   {
     test: /\.scss$/,
-    include: path.resolve(__dirname, "src"),
+    include: resolve("./src"),
     use: [
       "style-loader",
       {
@@ -35,7 +39,7 @@ const dev_cssRule = [
   },
   {
     test: /\.css$/,
-    include: path.resolve(__dirname, "src"),
+    include: resolve("./src"),
     use: [
       "style-loader",
       {
@@ -57,7 +61,7 @@ const dev_cssRule = [
 const prod_cssRule = [
   {
     test: /\.scss$/,
-    include: path.resolve(__dirname, "src"),
+    include: resolve("./src"),
     use: extractPlugin.extract({
       use: [
         {
@@ -78,7 +82,7 @@ const prod_cssRule = [
   },
   {
     test: /\.css$/,
-    include: path.resolve(__dirname, "src"),
+    include: resolve("./src"),
     use: extractPlugin.extract({
       use: [
         {
@@ -102,7 +106,10 @@ env === "development" ? (cssrule = dev_cssRule) : (cssrule = prod_cssRule)
 
 const baseConfig = {
   resolve: { 
-    extensions: [".jsx", ".js", ".json", ".scss", ".css"]
+    extensions: [".jsx", ".js", ".json", ".scss", ".css"],
+    alias: {
+      '@': resolve('./src'),
+    }
   },
   module: {
     rules: [
@@ -118,7 +125,7 @@ const baseConfig = {
       },
       {
         test: /\.(js|jsx)$/,
-        include: path.resolve(__dirname, "./src"),
+        include: resolve("./src"),
         use: {
           loader: "babel-loader?cacheDirectory=true",
         }

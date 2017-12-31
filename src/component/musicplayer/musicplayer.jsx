@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import styles from "../assets/css/AudioStyle.scss";
 import { connect } from "react-redux";
-import { setPlayerState } from "../reducers/index";
-import { randomColor, rclength } from "../utils/randomColor";
-import Wavefrom from '../component/wavefrom';
+import { setPlayerState } from "@/reducers/index";
+import { randomColor, rclength } from "@/utils/randomColor";
+import Wavefrom from '@/component/wavefrom/wavefrom';
+import styles from "@/assets/css/musicplayer.scss";
 
 let interval = null
 
@@ -21,12 +21,12 @@ let interval = null
     }
   }
 )
-export default class Index extends Component {
+export default class musicplayer extends Component {
   state = {
     color1: '#3d4d91',
     color2: '#bb71f3'
   }
-  randomWrap () {
+  randomBackground () {
     // `linear-gradient(135deg, ${this.state.color1} 0%, ${this.state.color2} 100%)`
     interval = setInterval(() => {
       this.setState(state => {
@@ -59,7 +59,7 @@ export default class Index extends Component {
         </div>
 
         <div className={styles.waveform}>
-          <Wavefrom />
+          
         </div>
         <div className={styles.progressBar}></div>
         <div className={styles.progress}></div>
@@ -77,7 +77,7 @@ export default class Index extends Component {
     );
   }
   componentDidMount() {
-    // this.randomWrap()
+    // this.randomBackground()
   }
   componentWillUnmount() {
     interval = null
