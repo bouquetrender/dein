@@ -3,6 +3,7 @@ import clone from "clone";
 
 const initialState = {
   playState: 'pause',
+  showSiriwave: false,
   randomBg: false
 };
 
@@ -11,6 +12,12 @@ const actionType = {
     return {
       ...state,
       playState: action.playState
+    };
+  },
+  [PlayerActionTypes.SIRIWAVE_STATE]: (state, action) => {
+    return {
+      ...state,
+      showSiriwave: action.showSiriwave
     };
   }
 };

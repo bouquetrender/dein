@@ -1,33 +1,56 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { setPlayerState } from "@/reducers/index";
+import { setPlayerState, setSiriWaveShowState } from "@/actions/player";
 import { randomColor, rclength } from "@/utils/randomColor";
-import Wavefrom from '@/component/wavefrom/wavefrom';
-import styles from "@/assets/css/musicplayer.scss";
+import SiriWave from '@/component/siriwave/siriwave';
+import styles from "./musicplayer.scss";
 
 let interval = null
 
+// SiriWave 组件参数
+const opt = {
+  width: window.innerWidth,
+  height: window.innerHeight * 0.3,
+  cover: true,
+  speed: 0.03,
+  amplitude: 0.7,
+  frequency: 2
+}
+
+// Waveform 界面中部动态进度条
+class Waveform extends Component {
+  render () {
+    return this.props.show ?
+      <SiriWave {...opt} /> : <div className={styles.progressBar}></div>
+  }
+}
+
+// musicplayer 音乐播放器界面整体组件
 @connect(
   state => {
     return {
-      playState: state.IndexReducers.playState
+      playState: state.IndexReducers.playState,
+      showSiriwave: state.IndexReducers.showSiriwave
     }
   },
   dispatch => {
     return {
-      setPlayerState: data => {
-        dispatch(setPlayerStateAction(data));
+      setPlayerStateAction: data => {
+        dispatch(setPlayerState(data));
+      },
+      setSiriWaveShowStateAction: data => {
+        dispatch(setSiriWaveShowState(data));
       }
     }
   }
 )
-export default class musicplayer extends Component {
-  state = {
+class musicplayer extends Component {
+  static state = {
     color1: '#3d4d91',
     color2: '#bb71f3'
   }
   randomBackground () {
-    // `linear-gradient(135deg, ${this.state.color1} 0%, ${this.state.color2} 100%)`
+    // background: linear-gradient(135deg, ${this.state.color1} 0%, ${this.state.color2} 100%)
     interval = setInterval(() => {
       this.setState(state => {
         return {
@@ -38,6 +61,7 @@ export default class musicplayer extends Component {
     },5000)
   }
   render() {
+    const { showSiriwave } = this.props
     return (
       <div className={styles.playerWrap} style={{background: 'linear-gradient(135deg, #bb71f3 0%, #3d4d91 100%)'}}>
         <div className={styles.title}>
@@ -58,10 +82,7 @@ export default class musicplayer extends Component {
           <div className={styles.btn + ' ' + styles.volumeBtn}></div>
         </div>
 
-        <div className={styles.waveform}>
-          
-        </div>
-        <div className={styles.progressBar}></div>
+        <Waveform show={showSiriwave} />
         <div className={styles.progress}></div>
 
         <div className={styles.playlist}>
@@ -77,9 +98,14 @@ export default class musicplayer extends Component {
     );
   }
   componentDidMount() {
+    this.props.setSiriWaveShowStateAction({
+      showSiriwave: true
+    })
     // this.randomBackground()
   }
   componentWillUnmount() {
     interval = null
   }
 }
+
+export default musicplayer

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import styles from "@/assets/css/musicplayer.scss";
+import styles from "@/assets/css/view.scss";
 
 // Transtion
 import { TransitionGroup, CSSTransition } from "react-transition-group";

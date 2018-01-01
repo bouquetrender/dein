@@ -1,12 +1,12 @@
 {
-  "name": "electron-player",
+  "name": "deinmusic-player",
   "author": "Sakuya",
-  "description": "electron player",
+  "description": "deinmusic player",
   "version": "1.0.0",
   "main": "./main.js",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/Sakuyakun/deinmusic-player"
   },
   "license": "MIT",
   "scripts": {

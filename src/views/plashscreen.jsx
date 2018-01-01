@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "@/assets/css/musicplayer.scss";
+import styles from "@/assets/css/view.scss";
 import Link from "react-router-dom/Link";
 import intlGet from "@/intl";
 
@@ -22,6 +22,6 @@ export default class Index extends Component {
   componentDidMount () {
     setTimeout(() => {
       this.props.history.push('player')
-    },3000)
+    },2000)
   }
 }
