@@ -1,33 +1,33 @@
-# Introduction
+## Introduction
 
-无
+坑待填练习用，一个基于 Electron 构建, React 框架的音乐播放器
 
-# Directory Layout
+## Directory Layout
 
 ```
 ├── src
-│   ├── actions
+│   ├── actions                    # redux actions
 │   │   └── player.jsx
-│   ├── app.jsx
+│   ├── app.jsx                    # 组件入口
 │   ├── assets
 │   │   ├── css
 │   │   └── images
 │   ├── component                  # 组件
 │   │   ├── musicplayer                 # 播放器控件
 │   │   └── siriwave                    # 波浪线条组件
-│   ├── entry.jsx
-│   ├── intl.js
-│   ├── locales
+│   ├── entry.jsx                  # 入口
+│   ├── intl.js                    # i18n
+│   ├── locales                    # 国际化
 │   │   ├── en-US.json
 │   │   ├── ja-JP.json
 │   │   └── zh-CN.json
-│   ├── normalize.scss
-│   ├── reducers
+│   ├── normalize.scss             # normalize
+│   ├── reducers                   # redux reducers
 │   │   └── index.jsx
-│   ├── routers.jsx
-│   ├── template
+│   ├── routers.jsx                # 路由
+│   ├── template                   # HTML模板
 │   │   └── index.html
-│   ├── utils
+│   ├── utils                      # utils
 │   │   ├── hex2rgb.js
 │   │   ├── immutable-pure-render-decorator.jsx
 │   │   └── randomColor.js
@@ -43,7 +43,7 @@
 └── webpack.prod.config.js         # Webpack 部署环境配置
 ```
 
-# Run
+## Run
 `npm run start` 开发环境启动
 
 `npm run build` App打包
