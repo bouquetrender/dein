@@ -6,9 +6,9 @@ import styles from "@/assets/css/view.scss";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 // Router
-import Player from "./views/playerView";
-import plashscreen from "./views/plashscreen";
-import NoMatch from "./views/404";
+import Player from "./container/playerView";
+import plashscreen from "./container/plashscreen";
+import NoMatch from "./container/404";
 
 @withRouter
 export default class Routers extends Component {
@@ -19,10 +19,10 @@ export default class Routers extends Component {
     const { location } = this.props;
     const currentKey = location.pathname.split("/")[1] || "/";
     const timeout = { enter: 300, exit: 200 };
-    
+
     return (
       <div className={styles.view}>
-        {/* 
+        {/*
         <div className={styles.toparea}>
           <Navigation />
         </div>
@@ -30,8 +30,8 @@ export default class Routers extends Component {
         {/* Component */}
         <TransitionGroup>
           <CSSTransition
-              appear 
-              key={currentKey} 
+              appear
+              key={currentKey}
               timeout={timeout}
               classNames={{
                 enter: styles.fadeEnter,

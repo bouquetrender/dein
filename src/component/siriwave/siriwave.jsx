@@ -1,82 +1,170 @@
 import React, { Component } from "react";
-import hex2rgb from "@/utils/hex2rgb"
+
+class SiriWave {
+  constructor (opt) {
+    opt = opt || {};
+
+    this.phase = 0;
+    this.run = false;
+
+    // UI vars
+    this.ratio = opt.ratio || window.devicePixelRatio || 1;
+
+    this.width = this.ratio * (opt.width || 320);
+    this.width_2 = this.width / 2;
+    this.width_4 = this.width / 4;
+
+    this.height = this.ratio * (opt.height || 100);
+    this.height_2 = this.height / 2;
+
+    this.MAX = (this.height_2) - 4;
+
+    // Constructor opt
+    this.amplitude = opt.amplitude || 1;
+    this.speed = opt.speed || 0.2;
+    this.frequency = opt.frequency || 6;
+    this.color = (function hex2rgb(hex){
+      let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      hex = hex.replace(shorthandRegex, function(m,r,g,b) { return r + r + g + g + b + b; });
+      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ?
+      parseInt(result[1],16).toString()+','+parseInt(result[2], 16).toString()+','+parseInt(result[3], 16).toString()
+      : null;
+    })(opt.color || '#fff') || '255,255,255';
+
+    // Canvas
+    this.canvas = document.createElement('canvas');
+    this.canvas.width = this.width;
+    this.canvas.height = this.height;
+    if (opt.cover) {
+      this.canvas.style.width = this.canvas.style.height = '100%';
+    } else {
+      this.canvas.style.width = (this.width / this.ratio) + 'px';
+      this.canvas.style.height = (this.height / this.ratio) + 'px';
+    };
+
+    this.container = opt.container || document.body;
+    this.container.appendChild(this.canvas);
+
+    this.ctx = this.canvas.getContext('2d');
+
+    // Start
+    if (opt.autostart) {
+      this.start();
+    }
+  }
+  _GATF_cache = {}
+  _globAttFunc = (x) => {
+    if (this._GATF_cache[x] == null) {
+      this._GATF_cache[x] = Math.pow(4/(4+Math.pow(x,4)), 4);
+    }
+    return this._GATF_cache[x];
+  }
+  _xpos = (i) => {
+    return this.width_2 + i * this.width_4;
+  }
+  _ypos = (i, attenuation) => {
+    let att = (this.MAX * this.amplitude) / attenuation;
+    return this.height_2 + this._globAttFunc(i) * att * Math.sin(this.frequency * i - this.phase);
+  }
+  _drawLine = (attenuation, color, width) => {
+    this.ctx.moveTo(0,0);
+    this.ctx.beginPath();
+    this.ctx.strokeStyle = color;
+    this.ctx.lineWidth = width || 1;
+
+    let i = -2;
+    while ((i += 0.01) <= 2) {
+      let y = this._ypos(i, attenuation);
+      if (Math.abs(i) >= 1.90) y = this.height_2;
+      this.ctx.lineTo(this._xpos(i), y);
+    }
+
+    this.ctx.stroke();
+  }
+  _clear = () => {
+    this.ctx.globalCompositeOperation = 'destination-out';
+    this.ctx.fillRect(0, 0, this.width, this.height);
+    this.ctx.globalCompositeOperation = 'source-over';
+  }
+  _draw = () => {
+    if (this.run === false) return;
+
+    this.phase = (this.phase + Math.PI*this.speed) % (2*Math.PI);
+
+    this._clear();
+    this._drawLine(-2, 'rgba(' + this.color + ',0.1)');
+    this._drawLine(-6, 'rgba(' + this.color + ',0.2)');
+    this._drawLine(4, 'rgba(' + this.color + ',0.4)');
+    this._drawLine(2, 'rgba(' + this.color + ',0.6)');
+    this._drawLine(1, 'rgba(' + this.color + ',1)', 1.5);
+
+    if (window.requestAnimationFrame) {
+      requestAnimationFrame(this._draw.bind(this));
+      return;
+    };
+    setTimeout(this._draw.bind(this), 20);
+  }
+  start = () => {
+    this.phase = 0;
+    this.run = true;
+    this._draw();
+  }
+  stop = () => {
+    this.phase = 0;
+    this.run = false;
+  }
+  setSpeed = (v) => {
+    this.speed = v;
+  }
+  setNoise = (v) => {
+    this.amplitude = Math.max(Math.min(v, 1), 0);
+  }
+  setAmplitude = (v) => {
+    this.amplitude = Math.max(Math.min(v, 1), 0);
+  }
+}
+
+const hex2rgb = (hex) => {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
+  hex = hex.replace(shorthandRegex, function(m,r,g,b) { return r + r + g + g + b + b })
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  return result ?
+    parseInt(result[1],16).toString()+','+parseInt(result[2], 16).toString()+','+parseInt(result[3], 16).toString() :
+    null
+}
 
 const waveformStyle = {
-  // display: 'none',
   width: '100%',
-  height: '30%',
+  height: 'calc(30% + 30px)',
   position: 'absolute',
   left: '0',
-  top: '50%',
-  margin: '-15% auto',
+  top: 'calc(50% + 30px)',
+  margin: 'calc(-15% + 30px) auto',
   cursor: 'pointer',
   opacity: '0.8',
   userSelect: 'none',
 }
 
-this.phase = 0
-this.run = false
-
-class SiriWave extends Component {
-  static defaultProps = {
-    // Constructor opt
-    width: window.innerWidth,
-    height: window.innerHeight * 0.3,
-    cover: true,
-    ratio: window.devicePixelRatio || 1,
-    amplitude: 1,
-    speed: 0.2,
-    frequency: 6,
-    color: '#fff'
-  }
-  static state = {
-    // UI vars
-    phase: 0,
-    run: false,
-    width: null,
-    width_2: null,
-    width_4: null,
-    height: null,
-    height_2: null,
-    MAX: null,
-    colorRGB: null,
-  }
-
+class SiriWaveWrap extends Component {
   render () {
-    const { width, height } = this.state
-    const { cover } = this.props
-
-    const canvasStyle = {
-      height: cover ? '100%' : `${height / ratio}px`,
-      width: cover ? '100%' : `${width / ratio}px`
-    }
-
     return (
-      <div style={waveformStyle}>
-        <canvas
-          ref={(canvas) => {this.waveCanvasEle = canvas}}
-          style={canvasStyle}
-        ></canvas>
+      <div
+        ref={(wavefrom) => {this.wavefromEle = wavefrom}}
+        style={waveformStyle}
+      >
       </div>
     )
   }
   componentWillMount () {
-    this.setState((state, props) => {
-      return {
-        width: props.ratio * (props.width || 320),
-        width_2: props.width / 2,
-        width_4: props.width / 4,
-        height: props.ratio * (props.height || 100),
-        height_2: props.height / 2,
-        MAX: (props.height / 2) - 4,
-        colorRGB: hex2rgb(props.color)
-      }
-    })
   }
   componentDidMount () {
-    const ctx = this.waveCanvasEle.getContext('2d')
-    console.log(ctx)
+    const wf = new SiriWave({
+      container: this.wavefromEle,
+      ...this.props.opt
+    })
+    wf.start()
   }
 }
 
-export default SiriWave
+export default SiriWaveWrap
