@@ -105,7 +105,7 @@ const prod_cssRule = [
 env === "development" ? (cssrule = dev_cssRule) : (cssrule = prod_cssRule)
 
 const baseConfig = {
-  resolve: { 
+  resolve: {
     extensions: [".jsx", ".js", ".json", ".scss", ".css"],
     alias: {
       '@': resolve('./src'),
@@ -150,7 +150,7 @@ const baseConfig = {
         }]
       },
       {
-        test: /\.(eot|ttf|woff|woff2|svg|svgz)$/,
+        test: /\.(eot|ttf|woff|woff2|svg|svgz|mp3)$/,
         use: [{
           loader: 'url-loader',
           options: {

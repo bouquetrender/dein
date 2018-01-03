@@ -136,11 +136,11 @@ const hex2rgb = (hex) => {
 
 const waveformStyle = {
   width: '100%',
-  height: 'calc(30% + 30px)',
+  height: '30%',
   position: 'absolute',
   left: '0',
-  top: 'calc(50% + 30px)',
-  margin: 'calc(-15% + 30px) auto',
+  top: '50%',
+  margin: '-15% auto',
   cursor: 'pointer',
   opacity: '0.8',
   userSelect: 'none',

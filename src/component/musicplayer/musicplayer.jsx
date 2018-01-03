@@ -1,16 +1,26 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { setPlayerState, setSiriWaveShowState } from "@/actions/player";
-import { randomColor, rclength } from "@/utils/randomColor";
-import SiriWave from '@/component/siriwave/siriwave';
-import styles from "./musicplayer.scss";
+import React, { Component } from "react"
+import { connect } from "react-redux"
+import { setPlayerState, setSiriWaveShowState, setSongListState } from "@/actions/player"
+import { randomColor, rclength } from "@/utils/randomColor"
+import SiriWave from '@/component/siriwave/siriwave'
+import styles from "./musicplayer.scss"
+import ReactHowler from 'react-howler'
+
+// 本地音乐
+import moreOneNight from '@/assets/mp3/moreOneNight.mp3'
+import dream from '@/assets/mp3/dream.mp3'
+
+const songList = {
+  moreOneNight,
+  dream
+}
 
 let interval = null
 
 // SiriWave 组件参数
 const opt = {
   width: window.innerWidth,
-  height: (window.innerHeight + 30) * 0.3,
+  height: window.innerHeight * 0.3,
   cover: true,
   speed: 0.03,
   amplitude: 0.7,
@@ -29,7 +39,8 @@ class Waveform extends Component {
 @connect(
   state => ({
     playState: state.IndexReducers.playState,
-    showSiriwave: state.IndexReducers.showSiriwave
+    showSiriwave: state.IndexReducers.showSiriwave,
+    showSongList: state.IndexReducers.showSongList,
   }),
   dispatch => ({
     setPlayerStateAction: data => {
@@ -37,6 +48,9 @@ class Waveform extends Component {
     },
     setSiriWaveShowStateAction: data => {
       dispatch(setSiriWaveShowState(data));
+    },
+    setSongListStateAction: data => {
+      dispatch(setSongListState(data));
     }
   })
 )
@@ -57,13 +71,11 @@ class musicplayer extends Component {
     },5000)
   }
   handlePlayBtn = () => {
-    const status = !this.props.showSiriwave
-    const playerBtnStatus = this.props.playState === 'pause' ? 'play' : 'pause'
     this.props.setSiriWaveShowStateAction({
-      showSiriwave: status
+      showSiriwave: !this.props.showSiriwave
     })
     this.props.setPlayerStateAction({
-      playState: playerBtnStatus
+      playState: this.props.playState === 'pause' ? 'play' : 'pause'
     })
   }
   renderPlayOrPauseBtn = () => {
@@ -71,11 +83,37 @@ class musicplayer extends Component {
       <div className={styles.btn + ' ' + styles.playBtn} onClick={this.handlePlayBtn}></div> :
       <div className={styles.btn + ' ' + styles.pauseBtn} onClick={this.handlePlayBtn}></div>
   }
+  switchPlayList = () => {
+    this.props.setSongListStateAction({
+      showSongList: !this.props.showSongList
+    })
+  }
+  // 音乐列表渲染
+  songListItem = () => {
+    return Object.keys(songList).map((name, index) => (
+      <div
+        className={styles.listSong}
+        key={index}
+        onClick={(event) => { event.stopPropagation(); this.handleSelectSong(name)}}
+      >
+        {name}
+      </div>
+    ))
+  }
+  // 选择列表音乐
+  handleSelectSong = (name) => {
+    console.log(name)
+  }
   render() {
-    const { showSiriwave } = this.props
+    const { showSiriwave, showSongList } = this.props
 
     return (
       <div className={styles.playerWrap} style={{background: 'linear-gradient(135deg, #bb71f3 0%, #3d4d91 100%)'}}>
+        <ReactHowler
+          src={songList.moreOneNight}
+          playing={this.props.playState === 'play' ? true : false}
+          html5={true}
+        />
         <div className={styles.title}>
           <span></span>
           <div className={styles.timer}>0:00</div>
@@ -89,15 +127,17 @@ class musicplayer extends Component {
             <div className={styles.btn + ' ' + styles.prevBtn}></div>
             <div className={styles.btn + ' ' + styles.nextBtn}></div>
           </div>
-          <div className={styles.btn + ' ' + styles.playlistBtn}></div>
+          <div className={styles.btn + ' ' + styles.playlistBtn} onClick={this.switchPlayList}></div>
           <div className={styles.btn + ' ' + styles.volumeBtn}></div>
         </div>
 
         <Waveform show={showSiriwave} />
         <div className={styles.progress}></div>
 
-        <div className={styles.playlist}>
-          <div className={styles.list}></div>
+        <div className={styles.playlist + ' ' + (showSongList === true ? styles.showPlaylist : '')} onClick={this.switchPlayList}>
+          <div className={styles.list}>
+            {this.songListItem()}
+          </div>
         </div>
 
         <div className={styles.volume + ' ' + styles.fadeout}>

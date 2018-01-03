@@ -1,8 +1,8 @@
-## Introduction
+## 说明
 
-坑待填练习用，一个基于 Electron 构建, React 框架的音乐播放器
+一个基于 Electron 构建, React 框架的音乐播放器
 
-## Directory Layout
+## 目录
 
 ```
 ├── src
@@ -43,9 +43,12 @@
 └── webpack.prod.config.js         # Webpack 部署环境配置
 ```
 
-## Run
+## 命令
+
 `npm run start` 开发环境启动
 
-`npm run build` App打包
+`npm run build` 项目打包 App 启动预览
 
 `npm run lint` 代码检测
+
+`electron-packager [input src] [name] --out [output src]` App 打包
