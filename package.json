@@ -1,12 +1,12 @@
 {
-  "name": "deinmusic-player",
+  "name": "dein-player",
   "author": "Sakuya",
-  "description": "deinmusic player",
+  "description": "dein player",
   "version": "1.0.0",
   "main": "./main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Sakuyakun/deinmusic-player"
+    "url": "https://github.com/Sakuyakun/Dein"
   },
   "license": "MIT",
   "scripts": {
@@ -21,9 +21,12 @@
   ],
   "prettier": {
     "singleQuote": true,
-    "semi": true
+    "semi": false
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.0",
+    "@fortawesome/fontawesome-free-solid": "^5.0.2",
+    "@fortawesome/react-fontawesome": "^0.0.17",
     "animated": "^0.2.1",
     "axios": "^0.17.1",
     "babel-polyfill": "^6.26.0",

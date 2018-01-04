@@ -1,34 +1,34 @@
-import React, { Component } from 'react';
-import Routers from './routers.jsx';
-import HashRouter from 'react-router-dom/HashRouter';
-import { Provider } from 'react-redux';
-import IndexReducers from './reducers/index';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import React, { Component } from 'react'
+import Routers from './routers.jsx'
+import HashRouter from 'react-router-dom/HashRouter'
+import { Provider } from 'react-redux'
+import IndexReducers from './reducers/index'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
 
-import intl from 'react-intl-universal';
-import { locales } from './intl';
+import intl from 'react-intl-universal'
+import { locales } from './intl'
 
 // 自定义中间件
 const myMiddleware = store => next => action => {
   // some code ...
-  let result = next(action);
-  return result;
-};
+  let result = next(action)
+  return result
+}
 
 // store
-const combine = combineReducers({ IndexReducers });
-const store = createStore(combine, applyMiddleware(myMiddleware));
+const combine = combineReducers({ IndexReducers })
+const store = createStore(combine, applyMiddleware(myMiddleware))
 
 export default class App extends Component {
   state = {
     initDone: false
-  };
+  }
 
   loadLocales() {
     let currentLocale = intl.determineLocale({
       urlLocaleKey: 'lang',
       cookieLocaleKey: 'lang'
-    });
+    })
     intl
       .init({
         currentLocale,
@@ -40,9 +40,9 @@ export default class App extends Component {
         this.setState(prevState => {
           return {
             initDone: !prevState.initDone
-          };
-        });
-      });
+          }
+        })
+      })
   }
   render() {
     return (
@@ -53,9 +53,9 @@ export default class App extends Component {
           </HashRouter>
         </Provider>
       )
-    );
+    )
   }
   componentDidMount() {
-    this.loadLocales();
+    this.loadLocales()
   }
 }

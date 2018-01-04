@@ -1,24 +1,24 @@
-import React, { Component } from 'react';
-import { Route, Switch, withRouter } from 'react-router-dom';
-import styles from '@/assets/css/view.scss';
+import React, { Component } from 'react'
+import { Route, Switch, withRouter } from 'react-router-dom'
+import styles from '@/assets/css/view.scss'
 
 // Transtion
-import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 // Router
-import Player from './container/playerView';
-import plashscreen from './container/plashscreen';
-import NoMatch from './container/404';
+import Player from './container/playerView'
+import plashscreen from './container/plashscreen'
+import NoMatch from './container/404'
 
 @withRouter
 export default class Routers extends Component {
   constructor(props) {
-    super(props);
+    super(props)
   }
   render() {
-    const { location } = this.props;
-    const currentKey = location.pathname.split('/')[1] || '/';
-    const timeout = { enter: 300, exit: 200 };
+    const { location } = this.props
+    const currentKey = location.pathname.split('/')[1] || '/'
+    const timeout = { enter: 300, exit: 200 }
 
     return (
       <div className={styles.view}>
@@ -65,6 +65,6 @@ export default class Routers extends Component {
           </CSSTransition>
         </TransitionGroup>
       </div>
-    );
+    )
   }
 }

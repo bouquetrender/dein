@@ -249,8 +249,8 @@ const randomColor = [
   '#1C1C1C',
   '#080808',
   '#0C0C0C'
-];
+]
 
-const rclength = randomColor.length;
+const rclength = randomColor.length
 
-export { randomColor, rclength };
+export { randomColor, rclength }

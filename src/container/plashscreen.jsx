@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import styles from '@/assets/css/view.scss';
-import Link from 'react-router-dom/Link';
-import intlGet from '@/intl';
+import React, { Component } from 'react'
+import styles from '@/assets/css/view.scss'
+import Link from 'react-router-dom/Link'
+import intlGet from '@/intl'
 
 export default class Index extends Component {
   render() {
@@ -17,11 +17,11 @@ export default class Index extends Component {
           <div className={styles.p2}>{intlGet.getP2Title()}</div>
         </div>
       </div>
-    );
+    )
   }
   componentDidMount() {
     setTimeout(() => {
-      this.props.history.push('player');
-    }, 2000);
+      this.props.history.push('player')
+    }, 3000)
   }
 }

@@ -1,14 +1,14 @@
-import { AppContainer as HotReloader } from 'react-hot-loader';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import normalize from './normalize.scss';
-import * as OfflinePluginRuntime from 'offline-plugin/runtime';
-import App from './app';
-import 'babel-polyfill';
+import { AppContainer as HotReloader } from 'react-hot-loader'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import normalize from './normalize.scss'
+import * as OfflinePluginRuntime from 'offline-plugin/runtime'
+import App from './app'
+import 'babel-polyfill'
 
 // offline plugin 自行选择是否开启
 if (process.env.NODE_ENV === 'production') {
-  OfflinePluginRuntime.install();
+  OfflinePluginRuntime.install()
 }
 // 注销serviceWorker方案
 // if ('serviceWorker' in navigator) {
@@ -25,18 +25,18 @@ if (process.env.NODE_ENV === 'production') {
 // <HashRouter history={hashhistory}></HashRouter>
 
 // render
-const rootEle = document.getElementById('root');
+const rootEle = document.getElementById('root')
 const render = () => {
   ReactDOM.render(
     <HotReloader>
       <App />
     </HotReloader>,
     rootEle
-  );
-};
-render();
+  )
+}
+render()
 
 // hotReplace
 if (module.hot) {
-  module.hot.accept('./routers.jsx', render);
+  module.hot.accept('./routers.jsx', render)
 }

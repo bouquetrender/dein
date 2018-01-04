@@ -16,6 +16,6 @@
   },
   "root": true,
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": "off",
   }
 }
