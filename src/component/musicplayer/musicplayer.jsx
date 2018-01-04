@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+
 import { setPlayerState, setSiriWaveShowState, setSongListState } from "@/actions/player";
+
 import { randomColor, rclength } from "@/utils/randomColor";
 import SiriWave from "@/component/siriwave/siriwave";
 import styles from "./musicplayer.scss";
