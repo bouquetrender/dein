@@ -14,7 +14,14 @@
     "app-start": "cross-env NODE_ENV=development electron .",
     "build": "cross-env NODE_ENV=production webpack -p --config webpack.prod.config.js --progress --colors && electron .",
     "lint": "eslint ./src/**/*.jsx --color",
+    "precommit": "lint-staged",
     "format": "prettier --single-quote --write 'src/**/*.{jsx,js,css}'"
+  },
+  "lint-staged": {
+    "src/**/*.{jsx,js,css}": [
+      "prettier --single-quote --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "animated": "^0.2.1",

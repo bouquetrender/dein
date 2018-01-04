@@ -1,18 +1,14 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import {
-  setPlayerState,
-  setSiriWaveShowState,
-  setSongListState
-} from '@/actions/player';
-import { randomColor, rclength } from '@/utils/randomColor';
-import SiriWave from '@/component/siriwave/siriwave';
-import styles from './musicplayer.scss';
-import ReactHowler from 'react-howler';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { setPlayerState, setSiriWaveShowState, setSongListState } from "@/actions/player";
+import { randomColor, rclength } from "@/utils/randomColor";
+import SiriWave from "@/component/siriwave/siriwave";
+import styles from "./musicplayer.scss";
+import ReactHowler from "react-howler";
 
 // 本地音乐
-import moreOneNight from '@/assets/mp3/moreOneNight.mp3';
-import dream from '@/assets/mp3/dream.mp3';
+import moreOneNight from "@/assets/mp3/moreOneNight.mp3";
+import dream from "@/assets/mp3/dream.mp3";
 
 const songList = {
   moreOneNight,
@@ -63,8 +59,8 @@ class Waveform extends Component {
 )
 class musicplayer extends Component {
   state = {
-    color1: '#3d4d91',
-    color2: '#bb71f3'
+    color1: "#3d4d91",
+    color2: "#bb71f3"
   };
   randomBackground = () => {
     // background: linear-gradient(135deg, ${this.state.color1} 0%, ${this.state.color2} 100%)
@@ -82,18 +78,18 @@ class musicplayer extends Component {
       showSiriwave: !this.props.showSiriwave
     });
     this.props.setPlayerStateAction({
-      playState: this.props.playState === 'pause' ? 'play' : 'pause'
+      playState: this.props.playState === "pause" ? "play" : "pause"
     });
   };
   renderPlayOrPauseBtn = () => {
-    return this.props.playState === 'pause' ? (
+    return this.props.playState === "pause" ? (
       <div
-        className={styles.btn + ' ' + styles.playBtn}
+        className={styles.btn + " " + styles.playBtn}
         onClick={this.handlePlayBtn}
       />
     ) : (
       <div
-        className={styles.btn + ' ' + styles.pauseBtn}
+        className={styles.btn + " " + styles.pauseBtn}
         onClick={this.handlePlayBtn}
       />
     );
@@ -129,12 +125,12 @@ class musicplayer extends Component {
       <div
         className={styles.playerWrap}
         style={{
-          background: 'linear-gradient(135deg, #bb71f3 0%, #3d4d91 100%)'
+          background: "linear-gradient(135deg, #bb71f3 0%, #3d4d91 100%)"
         }}
       >
         <ReactHowler
           src={songList.moreOneNight}
-          playing={this.props.playState === 'play' ? true : false}
+          playing={this.props.playState === "play" ? true : false}
           html5={true}
         />
         <div className={styles.title}>
@@ -147,14 +143,14 @@ class musicplayer extends Component {
           <div className={styles.controlsInner}>
             <div className={styles.loading} />
             {this.renderPlayOrPauseBtn()}
-            <div className={styles.btn + ' ' + styles.prevBtn} />
-            <div className={styles.btn + ' ' + styles.nextBtn} />
+            <div className={styles.btn + " " + styles.prevBtn} />
+            <div className={styles.btn + " " + styles.nextBtn} />
           </div>
           <div
-            className={styles.btn + ' ' + styles.playlistBtn}
+            className={styles.btn + " " + styles.playlistBtn}
             onClick={this.switchPlayList}
           />
-          <div className={styles.btn + ' ' + styles.volumeBtn} />
+          <div className={styles.btn + " " + styles.volumeBtn} />
         </div>
 
         <Waveform show={showSiriwave} />
@@ -163,17 +159,17 @@ class musicplayer extends Component {
         <div
           className={
             styles.playlist +
-            ' ' +
-            (showSongList === true ? styles.showPlaylist : '')
+            " " +
+            (showSongList === true ? styles.showPlaylist : "")
           }
           onClick={this.switchPlayList}
         >
           <div className={styles.list}>{this.songListItem()}</div>
         </div>
 
-        <div className={styles.volume + ' ' + styles.fadeout}>
-          <div className={styles.barFull + ' ' + styles.bar} />
-          <div className={styles.barEmpty + ' ' + styles.bar} />
+        <div className={styles.volume + " " + styles.fadeout}>
+          <div className={styles.barFull + " " + styles.bar} />
+          <div className={styles.barEmpty + " " + styles.bar} />
           <div className={styles.sliderBtn} />
         </div>
       </div>
