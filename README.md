@@ -34,6 +34,7 @@
 │   └── views                      # 页面
 │       ├── plashscreen.jsx             # 启动页
 │       └── playerview.jsx              # 播放器界面
+├── main.js                        # electron 入口文件
 ├── index.html                     # devServer index
 ├── package-lock.json              # package lock
 ├── package.json                   # package

@@ -1,10 +1,10 @@
 const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-const {baseConfig} = require("./webpack.config.js");
+const { baseConfig } = require("./webpack.config.js");
 
 const PUBLIC_PATH = "http://localhost:3004/";
-const PORT = 3004
+const PORT = 3004;
 
 const devConfig = {
   devtool: "inline-source-map",
@@ -21,7 +21,7 @@ const devConfig = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(),
+    new webpack.NamedModulesPlugin()
   ],
   devServer: {
     host: "localhost",

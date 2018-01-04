@@ -2,7 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
-const OfflinePlugin = require("offline-plugin")
+const OfflinePlugin = require("offline-plugin");
 const { baseConfig, extractPlugin } = require("./webpack.config.js");
 const Clean = require("clean-webpack-plugin");
 
@@ -19,7 +19,7 @@ const prodConfig = {
     extractPlugin,
     new Clean(path.resolve(__dirname, "dist")),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
+      "process.env.NODE_ENV": JSON.stringify("production")
     }),
     new HtmlWebpackPlugin({
       template: "./src/template/index.html",
@@ -35,30 +35,30 @@ const prodConfig = {
         minifyCSS: true,
         minifyURLs: true
       },
-      favicon: path.resolve(__dirname, 'src/assets/images/favicon.png')
+      favicon: path.resolve(__dirname, "src/assets/images/favicon.png")
     }),
     new UglifyJSPlugin({
       compress: {
         warnings: false,
         drop_console: true,
-        pure_funcs: ['console.log']
+        pure_funcs: ["console.log"]
       },
       beautify: false,
       sourceMap: false
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'vendor',
+      name: "vendor",
       minChunks: module => {
-        return module.resource && /node_modules/.test(module.resource)
+        return module.resource && /node_modules/.test(module.resource);
       }
     }),
     new webpack.optimize.CommonsChunkPlugin({
-      name: 'client',
-      async: 'chunk-vendor',
+      name: "client",
+      async: "chunk-vendor",
       children: true,
       minChunks: (module, count) => {
-        return count >= 3
+        return count >= 3;
       }
     }),
     new webpack.optimize.CommonsChunkPlugin({
@@ -67,8 +67,8 @@ const prodConfig = {
     }),
     new OfflinePlugin({
       ServiceWorker: {
-        navigateFallbackURL: '/'
-      },
+        navigateFallbackURL: "/"
+      }
     })
   ]
 };

@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
 class SiriWave {
-  constructor (opt) {
+  constructor(opt) {
     opt = opt || {};
 
     this.phase = 0;
@@ -17,20 +17,27 @@ class SiriWave {
     this.height = this.ratio * (opt.height || 100);
     this.height_2 = this.height / 2;
 
-    this.MAX = (this.height_2) - 4;
+    this.MAX = this.height_2 - 4;
 
     // Constructor opt
     this.amplitude = opt.amplitude || 1;
     this.speed = opt.speed || 0.2;
     this.frequency = opt.frequency || 6;
-    this.color = (function hex2rgb(hex){
-      let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-      hex = hex.replace(shorthandRegex, function(m,r,g,b) { return r + r + g + g + b + b; });
-      let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result ?
-      parseInt(result[1],16).toString()+','+parseInt(result[2], 16).toString()+','+parseInt(result[3], 16).toString()
-      : null;
-    })(opt.color || '#fff') || '255,255,255';
+    this.color =
+      (function hex2rgb(hex) {
+        let shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+          return r + r + g + g + b + b;
+        });
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result
+          ? parseInt(result[1], 16).toString() +
+              ',' +
+              parseInt(result[2], 16).toString() +
+              ',' +
+              parseInt(result[3], 16).toString()
+          : null;
+      })(opt.color || '#fff') || '255,255,255';
 
     // Canvas
     this.canvas = document.createElement('canvas');
@@ -39,9 +46,9 @@ class SiriWave {
     if (opt.cover) {
       this.canvas.style.width = this.canvas.style.height = '100%';
     } else {
-      this.canvas.style.width = (this.width / this.ratio) + 'px';
-      this.canvas.style.height = (this.height / this.ratio) + 'px';
-    };
+      this.canvas.style.width = this.width / this.ratio + 'px';
+      this.canvas.style.height = this.height / this.ratio + 'px';
+    }
 
     this.container = opt.container || document.body;
     this.container.appendChild(this.canvas);
@@ -53,22 +60,25 @@ class SiriWave {
       this.start();
     }
   }
-  _GATF_cache = {}
-  _globAttFunc = (x) => {
+  _GATF_cache = {};
+  _globAttFunc = x => {
     if (this._GATF_cache[x] == null) {
-      this._GATF_cache[x] = Math.pow(4/(4+Math.pow(x,4)), 4);
+      this._GATF_cache[x] = Math.pow(4 / (4 + Math.pow(x, 4)), 4);
     }
     return this._GATF_cache[x];
-  }
-  _xpos = (i) => {
+  };
+  _xpos = i => {
     return this.width_2 + i * this.width_4;
-  }
+  };
   _ypos = (i, attenuation) => {
-    let att = (this.MAX * this.amplitude) / attenuation;
-    return this.height_2 + this._globAttFunc(i) * att * Math.sin(this.frequency * i - this.phase);
-  }
+    let att = this.MAX * this.amplitude / attenuation;
+    return (
+      this.height_2 +
+      this._globAttFunc(i) * att * Math.sin(this.frequency * i - this.phase)
+    );
+  };
   _drawLine = (attenuation, color, width) => {
-    this.ctx.moveTo(0,0);
+    this.ctx.moveTo(0, 0);
     this.ctx.beginPath();
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = width || 1;
@@ -76,21 +86,21 @@ class SiriWave {
     let i = -2;
     while ((i += 0.01) <= 2) {
       let y = this._ypos(i, attenuation);
-      if (Math.abs(i) >= 1.90) y = this.height_2;
+      if (Math.abs(i) >= 1.9) y = this.height_2;
       this.ctx.lineTo(this._xpos(i), y);
     }
 
     this.ctx.stroke();
-  }
+  };
   _clear = () => {
     this.ctx.globalCompositeOperation = 'destination-out';
     this.ctx.fillRect(0, 0, this.width, this.height);
     this.ctx.globalCompositeOperation = 'source-over';
-  }
+  };
   _draw = () => {
     if (this.run === false) return;
 
-    this.phase = (this.phase + Math.PI*this.speed) % (2*Math.PI);
+    this.phase = (this.phase + Math.PI * this.speed) % (2 * Math.PI);
 
     this._clear();
     this._drawLine(-2, 'rgba(' + this.color + ',0.1)');
@@ -102,37 +112,43 @@ class SiriWave {
     if (window.requestAnimationFrame) {
       requestAnimationFrame(this._draw.bind(this));
       return;
-    };
+    }
     setTimeout(this._draw.bind(this), 20);
-  }
+  };
   start = () => {
     this.phase = 0;
     this.run = true;
     this._draw();
-  }
+  };
   stop = () => {
     this.phase = 0;
     this.run = false;
-  }
-  setSpeed = (v) => {
+  };
+  setSpeed = v => {
     this.speed = v;
-  }
-  setNoise = (v) => {
+  };
+  setNoise = v => {
     this.amplitude = Math.max(Math.min(v, 1), 0);
-  }
-  setAmplitude = (v) => {
+  };
+  setAmplitude = v => {
     this.amplitude = Math.max(Math.min(v, 1), 0);
-  }
+  };
 }
 
-const hex2rgb = (hex) => {
-  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i
-  hex = hex.replace(shorthandRegex, function(m,r,g,b) { return r + r + g + g + b + b })
-  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-  return result ?
-    parseInt(result[1],16).toString()+','+parseInt(result[2], 16).toString()+','+parseInt(result[3], 16).toString() :
-    null
-}
+const hex2rgb = hex => {
+  const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+    return r + r + g + g + b + b;
+  });
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? parseInt(result[1], 16).toString() +
+        ',' +
+        parseInt(result[2], 16).toString() +
+        ',' +
+        parseInt(result[3], 16).toString()
+    : null;
+};
 
 const waveformStyle = {
   width: '100%',
@@ -143,28 +159,28 @@ const waveformStyle = {
   margin: '-15% auto',
   cursor: 'pointer',
   opacity: '0.8',
-  userSelect: 'none',
-}
+  userSelect: 'none'
+};
 
 class SiriWaveWrap extends Component {
-  render () {
+  render() {
     return (
       <div
-        ref={(wavefrom) => {this.wavefromEle = wavefrom}}
+        ref={wavefrom => {
+          this.wavefromEle = wavefrom;
+        }}
         style={waveformStyle}
-      >
-      </div>
-    )
+      />
+    );
   }
-  componentWillMount () {
-  }
-  componentDidMount () {
+  componentWillMount() {}
+  componentDidMount() {
     const wf = new SiriWave({
       container: this.wavefromEle,
       ...this.props.opt
-    })
-    wf.start()
+    });
+    wf.start();
   }
 }
 
-export default SiriWaveWrap
+export default SiriWaveWrap;

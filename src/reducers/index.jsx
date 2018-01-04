@@ -1,5 +1,5 @@
-import { PlayerActionTypes } from "../actions/player";
-import clone from "clone";
+import { PlayerActionTypes } from '../actions/player';
+import clone from 'clone';
 
 const initialState = {
   playState: 'pause',

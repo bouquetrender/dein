@@ -1,16 +1,16 @@
-import React, { Component } from "react";
-import styles from "@/assets/css/view.scss";
-import Link from "react-router-dom/Link";
-import intlGet from "@/intl";
+import React, { Component } from 'react';
+import styles from '@/assets/css/view.scss';
+import Link from 'react-router-dom/Link';
+import intlGet from '@/intl';
 
 export default class Index extends Component {
   render() {
     return (
       <div className={styles.indexWrap}>
         <div className={styles.ballScaleMultiple}>
-          <div></div>
-          <div></div>
-          <div></div>
+          <div />
+          <div />
+          <div />
         </div>
         <div className={styles.indexTitle}>
           <div>{intlGet.getWelcomeTitle()}</div>
@@ -19,9 +19,9 @@ export default class Index extends Component {
       </div>
     );
   }
-  componentDidMount () {
+  componentDidMount() {
     setTimeout(() => {
-      this.props.history.push('player')
-    },2000)
+      this.props.history.push('player');
+    }, 2000);
   }
 }
