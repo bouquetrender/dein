@@ -154,6 +154,9 @@ class SiriWaveWrap extends Component {
   static defaultProps = {
     className: ''
   }
+  shouldComponentUpdate(nextProps) {
+    return this.props.className !== nextProps.className
+  }
   render() {
     const { className } = this.props
     return (

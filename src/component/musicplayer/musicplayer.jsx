@@ -87,18 +87,135 @@ const opt = {
 
 // Waveform 界面中部动态进度条
 class Waveform extends Component {
+  shouldComponentUpdate(nextProps) {
+    return this.props.show !== nextProps.show
+  }
   render() {
-    const { show } = this.props
     return (
       <React.Fragment>
         <SiriWave
-          className={styles.waveformStyle + ' ' + (show ? styles.show : '')}
+          className={
+            styles.waveformStyle + ' ' + (this.props.show ? styles.show : '')
+          }
           opt={opt}
         />
-        <div className={styles.progressBar + ' ' + (show ? '' : styles.show)} />
+        <div
+          className={
+            styles.progressBar + ' ' + (this.props.show ? '' : styles.show)
+          }
+        />
       </React.Fragment>
     )
   }
+}
+
+// 顶部歌曲时间信息
+class TopInfo extends React.PureComponent {
+  render() {
+    return (
+      <div className={styles.title}>
+        <span />
+        <div className={styles.timer}>0:00</div>
+        <div className={styles.duration}>0:00</div>
+      </div>
+    )
+  }
+}
+
+// 底部控制按钮
+class ControlsBtn extends React.PureComponent {
+  render() {
+    return (
+      <div className={styles.controlsOuter}>
+        <div className={styles.controlsInner}>
+          <div className={styles.loading} />
+          {this.props.playState === 'pause' ? (
+            <div
+              className={styles.btn + ' ' + styles.playBtn}
+              onClick={this.props.handlePlayBtn}
+            >
+              {playbtn}
+            </div>
+          ) : (
+            <div
+              className={styles.btn + ' ' + styles.pauseBtn}
+              onClick={this.props.handlePlayBtn}
+            >
+              {pausebtn}
+            </div>
+          )}
+          <div className={styles.btn + ' ' + styles.prevBtn}>
+            {stepBackward}
+          </div>
+          <div className={styles.btn + ' ' + styles.nextBtn}>{stepForward}</div>
+        </div>
+        <div
+          className={styles.btn + ' ' + styles.playlistBtn}
+          onClick={this.props.switchPlayList}
+        >
+          {listUl}
+        </div>
+        <div
+          className={styles.btn + ' ' + styles.volumeBtn}
+          onClick={this.props.showControlVolumeView}
+        >
+          {volume}
+        </div>
+      </div>
+    )
+  }
+}
+
+// 播放列表菜单
+class Playlist extends React.PureComponent {
+  selectSong = item => {
+    event.stopPropagation()
+    this.props.handleSelectSong(item)
+  }
+  render() {
+    return (
+      <div
+        className={
+          styles.playlist +
+          ' ' +
+          (this.props.showSongList === true ? styles.showPlaylist : '')
+        }
+        onClick={this.props.switchPlayList}
+      >
+        <div className={styles.list}>
+          {this.props.songList.map(item => (
+            <div
+              className={styles.listSong}
+              key={item.title}
+              onClick={() => {
+                this.selectSong(item)
+              }}
+            >
+              {item.title}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+}
+
+// 音量控制
+const VolumeControlPanel = props => {
+  return (
+    <div
+      className={
+        styles.volume +
+        ' ' +
+        (props.showVolumeControlBar ? styles.show : styles.fadeout)
+      }
+      onClick={props.showControlVolumeView}
+      onMouseUp={props.handleSliderBtnMouseUp}
+      onMouseMove={props.handleVolumeViewMove}
+    >
+      {props.children}
+    </div>
+  )
 }
 
 // musicplayer 音乐播放器界面控件
@@ -131,6 +248,7 @@ class musicplayer extends Component {
     color2: '#bb71f3',
     volumeValue: 1
   }
+  // 随机背景色
   randomBackground = () => {
     // background: linear-gradient(135deg, ${this.state.color1} 0%, ${this.state.color2} 100%)
     interval = setInterval(() => {
@@ -142,6 +260,7 @@ class musicplayer extends Component {
       })
     }, 5000)
   }
+  // 点击播放按钮
   handlePlayBtn = () => {
     this.props.setSiriWaveShowStateAction({
       showSiriwave: !this.props.showSiriwave
@@ -150,43 +269,11 @@ class musicplayer extends Component {
       playState: this.props.playState === 'pause' ? 'play' : 'pause'
     })
   }
-  renderPlayOrPauseBtn = () => {
-    return this.props.playState === 'pause' ? (
-      <div
-        className={styles.btn + ' ' + styles.playBtn}
-        onClick={this.handlePlayBtn}
-      >
-        {playbtn}
-      </div>
-    ) : (
-      <div
-        className={styles.btn + ' ' + styles.pauseBtn}
-        onClick={this.handlePlayBtn}
-      >
-        {pausebtn}
-      </div>
-    )
-  }
   // 音乐列表显示切换
   switchPlayList = () => {
     this.props.setSongListStateAction({
       showSongList: !this.props.showSongList
     })
-  }
-  // 音乐列表渲染
-  songListItem = () => {
-    return songList.map((item, index) => (
-      <div
-        className={styles.listSong}
-        key={index}
-        onClick={event => {
-          event.stopPropagation()
-          this.handleSelectSong(item)
-        }}
-      >
-        {item.title}
-      </div>
-    ))
   }
   // 选择列表音乐
   handleSelectSong = item => {
@@ -217,6 +304,7 @@ class musicplayer extends Component {
       }))
     }
   }
+  // ReactHowler 修改音量回调函数
   handleVolumeChange = () => {
     const { volumeValue } = this.state
     const barWidth = volumeValue * 90 / 100
@@ -226,98 +314,77 @@ class musicplayer extends Component {
       25}px`
   }
   render() {
-    const { showSiriwave, showSongList, showVolumeControlBar } = this.props
+    const {
+      showSiriwave,
+      showSongList,
+      showVolumeControlBar,
+      playState
+    } = this.props
     const { volumeValue } = this.state
-
+    const wrapBg = {
+      background: 'linear-gradient(135deg, #3e407b 0%, #634a90 100%)'
+    }
     return (
-      <div
-        className={styles.playerWrap}
-        style={{
-          background: 'linear-gradient(135deg, #bb71f3 0%, #3d4d91 100%)'
-        }}
-      >
+      <div className={styles.playerWrap} style={wrapBg}>
         <ReactHowler
           src={songList[1].filename}
-          playing={this.props.playState === 'play' ? true : false}
+          playing={playState === 'play' ? true : false}
           html5={true}
           volume={volumeValue || this.defaultVolumeValue}
           onVolume={this.handleVolumeChange}
         />
-        <div className={styles.title}>
-          <span />
-          <div className={styles.timer}>0:00</div>
-          <div className={styles.duration}>0:00</div>
-        </div>
 
-        <div className={styles.controlsOuter}>
-          <div className={styles.controlsInner}>
-            <div className={styles.loading} />
-            {this.renderPlayOrPauseBtn()}
-            <div className={styles.btn + ' ' + styles.prevBtn}>
-              {stepBackward}
-            </div>
-            <div className={styles.btn + ' ' + styles.nextBtn}>
-              {stepForward}
-            </div>
-          </div>
-          <div
-            className={styles.btn + ' ' + styles.playlistBtn}
-            onClick={this.switchPlayList}
-          >
-            {listUl}
-          </div>
-          <div
-            className={styles.btn + ' ' + styles.volumeBtn}
-            onClick={this.showControlVolumeView}
-          >
-            {volume}
-          </div>
-        </div>
+        <TopInfo />
+
+        <ControlsBtn
+          handlePlayBtn={this.handlePlayBtn}
+          playState={playState}
+          showControlVolumeView={this.showControlVolumeView}
+          switchPlayList={this.switchPlayList}
+        />
 
         <Waveform show={showSiriwave} />
         <div className={styles.progress} />
 
-        <div
-          className={
-            styles.playlist +
-            ' ' +
-            (showSongList === true ? styles.showPlaylist : '')
-          }
-          onClick={this.switchPlayList}
-        >
-          <div className={styles.list}>{this.songListItem()}</div>
-        </div>
+        <Playlist
+          handleSelectSong={this.handleSelectSong}
+          switchPlayList={this.switchPlayList}
+          showSongList={showSongList}
+          songList={songList}
+        />
 
-        <div
-          className={
-            styles.volume +
-            ' ' +
-            (showVolumeControlBar ? styles.show : styles.fadeout)
-          }
-          onClick={this.showControlVolumeView}
-          onMouseUp={this.handleSliderBtnMouseUp}
-          onMouseMove={this.handleVolumeViewMove}
+        <VolumeControlPanel
+          showVolumeControlBar={showVolumeControlBar}
+          handleVolumeViewMove={this.handleVolumeViewMove}
+          handleSliderBtnMouseDown={this.handleSliderBtnMouseDown}
+          handleSliderBtnMouseUp={this.handleSliderBtnMouseUp}
+          showControlVolumeView={this.showControlVolumeView}
         >
           <div
             className={styles.barFull + ' ' + styles.bar}
-            ref={barFull => (this.barFull = barFull)}
+            ref={barFull => {
+              this.barFull = barFull
+            }}
           />
           <div
             className={styles.barEmpty + ' ' + styles.bar}
-            ref={barEmpty => (this.barEmpty = barEmpty)}
+            ref={barEmpty => {
+              this.barEmpty = barEmpty
+            }}
           />
           <div
             className={styles.sliderBtn}
             onMouseDown={this.handleSliderBtnMouseDown}
-            ref={sliderBtn => (this.sliderBtn = sliderBtn)}
+            ref={sliderBtn => {
+              this.sliderBtn = sliderBtn
+            }}
           />
-        </div>
+        </VolumeControlPanel>
       </div>
     )
   }
   componentDidMount() {
     // this.randomBackground()
-    console.log('xxxxx')
   }
   componentWillUnmount() {
     interval = null
