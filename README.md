@@ -1,6 +1,6 @@
 ## 说明
 
-一个基于 Electron 构建, React 框架的音乐播放器
+基于 howler.js 制作的简易 React 音乐播放器
 
 ## 目录
 
